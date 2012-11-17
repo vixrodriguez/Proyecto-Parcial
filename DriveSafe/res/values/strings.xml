@@ -1,0 +1,11 @@
+<resources>
+    <string name="hello_world">Hello world!</string>
+    <string name="menu_settings">Settings</string>
+    <string name="title_activity_velocidad">Drive Safe</string>
+    <string name ="title_activity_registros">Registros</string>
+    <string name="app_name">Drive Safe</string>
+    <string name="strSonido">Sonido</string>
+    <string name="strArranque">Auto Arranque</string>
+    <string name="strBorrarHist">Borrar historial</string>
+	
+</resources>

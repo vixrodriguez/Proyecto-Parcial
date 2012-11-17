@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="lista">
+        <item>Fecha</item>
+        <item>Velocidad</item>
+        <item>Hora</item>
+    </string-array> 
+</resources>
