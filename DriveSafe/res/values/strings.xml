@@ -7,5 +7,6 @@
     <string name="strSonido">Sonido</string>
     <string name="strArranque">Auto Arranque</string>
     <string name="strBorrarHist">Borrar historial</string>
+    <string name="strOrdenamiento">Ordenamiento:</string>
 	
 </resources>
