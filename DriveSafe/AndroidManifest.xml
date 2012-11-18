@@ -12,7 +12,7 @@
         android:label="@string/app_name"
         android:theme="@style/AppTheme" >
         <activity
-            android:name=".MainActivity"
+            android:name=".VelocidadActivity"
             android:label="@string/title_activity_velocidad" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -21,7 +21,7 @@
             </intent-filter>
         </activity>
         
-        <activity android:name=".VelocidadActivity"></activity>
+        
         <activity android:name=".RegistroActivity"></activity>
         <activity android:name=".AjustesActivity"></activity>
         

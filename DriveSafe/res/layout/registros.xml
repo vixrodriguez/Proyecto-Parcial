@@ -11,4 +11,25 @@
         android:layout_alignParentTop="true"
         android:layout_marginTop="20dp" />
 
+    <TextView
+        android:id="@+id/lblOrdenamiento"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@+id/listaOrdenamiento"
+        android:layout_alignBottom="@+id/listaOrdenamiento"
+        android:layout_alignParentLeft="true"
+        android:layout_marginLeft="18dp"
+        android:text="@string/strOrdenamiento"
+        android:textAppearance="?android:attr/textAppearanceMedium" />
+
+    <ListView
+        android:id="@+id/listaRegistro"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_below="@+id/listaOrdenamiento"
+        android:layout_marginTop="24dp" >
+
+    </ListView>
+
 </RelativeLayout>
