@@ -20,6 +20,7 @@ public class AjustesActivity extends Activity {
          * del XML listaHistorial
          */
         Spinner sp = (Spinner)findViewById(R.id.listaBorrarHistorial);
+
 		ArrayAdapter<CharSequence> adp = ArrayAdapter.createFromResource
 		(this, R.array.listaBorrarHistorial, android.R.layout.simple_spinner_item);
 		

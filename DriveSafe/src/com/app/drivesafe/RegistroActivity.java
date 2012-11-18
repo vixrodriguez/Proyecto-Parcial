@@ -1,15 +1,19 @@
 package com.app.drivesafe;
 
+import com.app.DataBase.Handler_sqlite;
+import com.app.DataBase.TipoOrdenamiento;
+
 import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.Spinner;
-import android.widget.TextView;
 
 public class RegistroActivity extends Activity{
 
@@ -27,31 +31,63 @@ public class RegistroActivity extends Activity{
          * del XML lista
          */		
 		Spinner sp = (Spinner)findViewById(R.id.listaOrdenamiento);
+		
+		sp.setOnItemSelectedListener(new OnItemSelectedListener() {
+
+			public void onItemSelected(AdapterView<?> arg0, View arg1,
+					int arg2, long arg3) {
+				// TODO Auto-generated method stub
+				ListView list = (ListView) findViewById(R.id.listaRegistro);
+				mostrarListaRegistro(list);
+			}
+
+			public void onNothingSelected(AdapterView<?> arg0) {
+				// TODO Auto-generated method stub
+				
+			}
+		});
+		
 		ArrayAdapter<CharSequence> adp = ArrayAdapter.createFromResource
 		(this, R.array.lista, android.R.layout.simple_spinner_item);
 		
 		sp.setAdapter(adp);
 		
+		
+		/*sp.setOnItemSelectedListener(new OnItemSelectedListener() 
+		{
+
+			@SuppressLint("ShowToast")
+			public void onItemSelected(AdapterView<?> arg0, View arg1,
+					int arg2, long arg3) {
+				// TODO Auto-generated method stub
+				Toast.makeText(this, sp.getSelectedItem().toString(), Toast.LENGTH_LONG);
+			}
+
+			public void onNothingSelected(AdapterView<?> arg0) {
+				// TODO Auto-generated method stub
+				
+			}
+			
+		}
+		);*/
+		
 		handler = new Handler_sqlite(this); //Aqui instancia la base de datos
+		handler.abrir();
+		handler.ingresarRegistro(20.0, "16/11/2012","13:15", "Guayaquil");
+		handler.cerrar();
 	}
 	
-	
-	
-	@SuppressWarnings("null")
 	@Override
 	protected void onResume() {
 		// TODO Auto-generated method stub
 		super.onResume();
 		
-		Handler_sqlite handler = null;
-		handler.abrir(); //Abro la base de datos
+		/*handler.abrir(); //Abro la base de datos
 		
 		ListView list = (ListView) findViewById(R.id.listaRegistro);
 		this.mostrarListaRegistro(list);
-		handler.cerrar();//Cierro la base de datos
+		handler.cerrar();//Cierro la base de datos*/
 	}
-
-
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
@@ -85,17 +121,21 @@ public class RegistroActivity extends Activity{
 	
 	public void mostrarListaRegistro(ListView list)
 	{
-		int i;
-		String registro[] = handler.consultarRegistro();
+		TipoOrdenamiento t;
+		Spinner sp = (Spinner) findViewById(R.id.listaOrdenamiento);
 		
-		TextView dato;
-
-		for(i=0; i<registro.length; i++)
-		{
-			dato = new TextView(null);
-			dato.setText(registro[i]);
-			
-			list.addView(dato);
-		}
+		//Le asigno el valor de ordenamiento segun el escogido en el Spinner
+		if(sp.getSelectedItem().toString().equalsIgnoreCase("Velocidad"))
+			t = TipoOrdenamiento.PorVelocidad;
+		else if(sp.getSelectedItem().toString().equalsIgnoreCase("Hora"))
+			t = TipoOrdenamiento.PorHora;
+		else 
+			t = TipoOrdenamiento.PorFecha;
+		
+		//Se obtiene los valores de la tabla segun el parametro de ordenamiento
+		String registro[] = handler.consultarRegistro(t);
+		 
+		list.setAdapter(
+		new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, registro));
 	}
 }
