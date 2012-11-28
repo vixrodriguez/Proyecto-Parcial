@@ -114,6 +114,7 @@ public class RegistroActivity extends Activity{
 	   	menu2.setIcon(R.drawable.ico_registro);
 	   	menu3.setIcon(R.drawable.ico_ajustes);
 	   	
+	   	//4. Asigno los activity que se ejecutaran por cada opcion
 	   	menu1.setIntent(new Intent(this, VelocidadActivity.class));
 	   	menu2.setIntent(new Intent(this, RegistroActivity.class));
 	   	menu3.setIntent(new Intent(this, AjustesActivity.class));

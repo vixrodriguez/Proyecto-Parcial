@@ -6,6 +6,7 @@ import android.app.TabActivity;
 
 public class MainActivity extends TabActivity {
 
+	
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -16,5 +17,7 @@ public class MainActivity extends TabActivity {
         host.addTab(host.newTabSpec("Velocidad").setIndicator("Velocidad").setContent(new Intent(this, VelocidadActivity.class)));
         host.addTab(host.newTabSpec("Registro").setIndicator("Registros").setContent(new Intent(this, RegistroActivity.class)));
         host.addTab(host.newTabSpec("Ajustes").setIndicator("Ajustes").setContent(new Intent(this, AjustesActivity.class)));*/
+    
+        
     }
 }
