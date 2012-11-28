@@ -1,6 +1,5 @@
 package com.app.drivesafe;
 
-
 import com.google.android.maps.MapActivity;
 import android.content.Context;
 import android.content.Intent;
@@ -16,7 +15,6 @@ import android.view.MenuItem;
 import android.widget.CheckBox;
 import android.widget.SeekBar;
 import android.widget.TextView;
-
 
 public class VelocidadActivity extends MapActivity {
 
