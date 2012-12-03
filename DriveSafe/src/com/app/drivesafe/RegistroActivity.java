@@ -19,11 +19,19 @@ public class RegistroActivity extends Activity{
 
 	Handler_sqlite handler;
 	
+	//Intent de cada menu
+	private Intent velocidad, ajustes;
+	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.registros);
+		
+        //Creando los menus de cada actividad
+        velocidad = new Intent(this, new  VelocidadActivity().getClass());
+        ajustes = new Intent(this, new AjustesActivity().getClass());
+		
 		//Aqui le especifico cual es el XML para el diseño del activity
 		
 		/*
@@ -91,35 +99,29 @@ public class RegistroActivity extends Activity{
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
-	    //getMenuInflater().inflate(R.menu.activity_velocidad, menu);
-	  	crearMenuOpciones(menu);
+	    getMenuInflater().inflate(R.menu.menu, menu);
+	  	//crearMenuOpciones(menu);
 	    return true;
 	}
-	    
-	public void crearMenuOpciones(Menu menuOpciones)
-	{
-	 	//1.Creo una instancia de menu
-		//group, id, orden 
-	   	MenuItem menu1 = menuOpciones.add(0,0,0,"Velocidad");
-	   	MenuItem menu2 = menuOpciones.add(0,1,1,"Registro");
-	   	MenuItem menu3 = menuOpciones.add(0,2,2,"Ajustes");
-	   	
-	   	//2. seteo una tecla de atajo
-	   	menu1.setAlphabeticShortcut('V'); //tecla de acceso
-	   	menu2.setAlphabeticShortcut('R');
-	   	menu3.setAlphabeticShortcut('A');
-	   	
-	   	//3. Seteo Iconos
-	   	menu1.setIcon(R.drawable.ico_velocimetro);
-	   	menu2.setIcon(R.drawable.ico_registro);
-	   	menu3.setIcon(R.drawable.ico_ajustes);
-	   	
-	   	//4. Asigno los activity que se ejecutaran por cada opcion
-	   	menu1.setIntent(new Intent(this, VelocidadActivity.class));
-	   	menu2.setIntent(new Intent(this, RegistroActivity.class));
-	   	menu3.setIntent(new Intent(this, AjustesActivity.class));
-	}
 	
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		// TODO Auto-generated method stub
+		
+		switch(item.getItemId())
+		{
+			case R.id.MenuVelocidad:
+				item.setIntent(velocidad);
+				startActivity(velocidad);
+				break;
+			case R.id.MenuAjustes:
+				item.setIntent(ajustes);
+				startActivity(ajustes);
+				break;
+		}
+		return super.onOptionsItemSelected(item);
+	}
+	    
 	public void mostrarListaRegistro(ListView list)
 	{
 		TipoOrdenamiento t;

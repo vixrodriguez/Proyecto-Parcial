@@ -14,7 +14,8 @@
         android:layout_marginTop="53dp"
         android:text="@string/strSonido"
         android:textOff="@string/strSonido"
-        android:textOn="@string/strSonido" />
+        android:textOn="@string/strSonido"
+        android:checked="true" />
 
     <ToggleButton
         android:id="@+id/btnAutoArranque"
@@ -25,7 +26,8 @@
         android:layout_toRightOf="@+id/btnSonido"
         android:text="@string/strArranque"
         android:textOff="@string/strArranque"
-        android:textOn="@string/strArranque" />
+        android:textOn="@string/strArranque" 
+        android:checked="true"/>
 
     <Spinner
         android:id="@+id/listaBorrarHistorial"

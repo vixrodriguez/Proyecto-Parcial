@@ -23,12 +23,15 @@ public final class R {
         public static final int logo=0x7f020005;
     }
     public static final class id {
-        public static final int barraProgreso=0x7f08000c;
+        public static final int MenuAjustes=0x7f080010;
+        public static final int MenuRegistro=0x7f08000f;
+        public static final int MenuVelocidad=0x7f08000e;
+        public static final int barraProgreso=0x7f08000b;
         public static final int btnAutoArranque=0x7f080001;
         public static final int btnSonido=0x7f080000;
-        public static final int chkEstado=0x7f08000a;
+        public static final int lblDireccion=0x7f08000c;
         public static final int lblOrdenamiento=0x7f080008;
-        public static final int lblVelocidad=0x7f08000b;
+        public static final int lblVelocidad=0x7f08000a;
         public static final int listaBorrarHistorial=0x7f080002;
         public static final int listaOrdenamiento=0x7f080007;
         public static final int listaRegistro=0x7f080009;
@@ -46,6 +49,7 @@ public final class R {
     }
     public static final class menu {
         public static final int activity_velocidad=0x7f070000;
+        public static final int menu=0x7f070001;
     }
     public static final class string {
         public static final int app_name=0x7f050004;

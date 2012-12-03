@@ -24,11 +24,10 @@
             </intent-filter>
         </activity>
         
-        
         <activity android:name=".RegistroActivity"></activity>
         <activity android:name=".AjustesActivity"></activity>
+        
         <uses-library android:name="com.google.android.maps"/>
     </application>
-
 	
 </manifest>

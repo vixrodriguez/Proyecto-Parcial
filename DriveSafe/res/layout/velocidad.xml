@@ -2,16 +2,8 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:android1="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent" >
-
-    <CheckBox
-        android:id="@+id/chkEstado"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentLeft="true"
-        android:layout_marginBottom="18dp"
-        android:text="CheckBox" />
+    android:layout_height="match_parent" 
+    android:background="#000000">
 
     <TextView
         android1:id="@+id/lblVelocidad"
@@ -20,8 +12,8 @@
         android1:layout_alignParentLeft="true"
         android1:layout_alignParentTop="true"
         android1:layout_marginTop="83dp"
-        android1:text="Large Text"
-        android1:textAppearance="?android:attr/textAppearanceLarge" />
+        android1:text="Velocidad: "/>
+    
 
     <SeekBar
         android1:id="@+id/barraProgreso"
@@ -31,5 +23,14 @@
         android1:layout_below="@+id/lblVelocidad"
         android1:layout_marginTop="68dp"
         android1:max="200" />
+
+    <TextView
+        android1:id="@+id/lblDireccion"
+        android1:layout_width="wrap_content"
+        android1:layout_height="wrap_content"
+        android1:layout_alignParentLeft="true"
+        android1:layout_below="@+id/barraProgreso"
+        android1:layout_marginTop="50dp"
+        android1:text="TextView" />
 
 </RelativeLayout>
