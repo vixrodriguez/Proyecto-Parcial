@@ -10,42 +10,21 @@
         android:layout_height="100dp"
         android:layout_alignParentLeft="true"
         android:layout_alignParentTop="true"
-        android:layout_marginLeft="22dp"
-        android:layout_marginTop="53dp"
+        android:layout_marginLeft="20dp"
+        android:layout_marginTop="32dp"
+        android:checked="true"
         android:text="@string/strSonido"
         android:textOff="@string/strSonido"
-        android:textOn="@string/strSonido"
-        android:checked="true" />
+        android:textOn="@string/strSonido" />
 
-    <ToggleButton
-        android:id="@+id/btnAutoArranque"
-        android:layout_width="100dp"
-        android:layout_height="100dp"
-        android:layout_alignTop="@+id/btnSonido"
-        android:layout_marginLeft="60dp"
-        android:layout_toRightOf="@+id/btnSonido"
-        android:text="@string/strArranque"
-        android:textOff="@string/strArranque"
-        android:textOn="@string/strArranque" 
-        android:checked="true"/>
-
-    <Spinner
-        android:id="@+id/listaBorrarHistorial"
+    <Button
+        android:id="@+id/Button1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentRight="true"
-        android:layout_below="@+id/btnAutoArranque"
-        android:layout_marginTop="87dp" />
-
-    <TextView
-        android:id="@+id/textView1"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignBaseline="@+id/listaBorrarHistorial"
-        android:layout_alignBottom="@+id/listaBorrarHistorial"
-        android:layout_alignLeft="@+id/btnSonido"
-        android:text="@string/strBorrarHist"
-        android:textAppearance="?android:attr/textAppearanceMedium"
-        android:textColor="#FFFFFF" />
+        android:layout_below="@+id/btnSonido"
+        android:layout_marginRight="32dp"
+        android:layout_marginTop="52dp"
+        android:text="Borrar Historial" />
 
 </RelativeLayout>

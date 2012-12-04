@@ -76,7 +76,7 @@ public class Handler_sqlite extends SQLiteOpenHelper{
 	 */
 	public String[] consultarRegistro(TipoOrdenamiento t)
 	{
-		int id, vel, f, h, l, indice=0;
+		int vel, f, h, l, indice=0;
 		String registro[], temp; //Referencia que apuntara al registro actual que se encuentre
 		
 		//String que especifica que columnas deseo obtener para el SELECT
@@ -102,7 +102,7 @@ public class Handler_sqlite extends SQLiteOpenHelper{
 		
 		
 		//Obtengo el indice de cada uno de los registros de la tabla
-		id = c.getColumnIndex(_ID);
+
 		vel = c.getColumnIndex("velocidad");
 		f = c.getColumnIndex("fecha");
 		h = c.getColumnIndex("horaActual");
@@ -113,7 +113,7 @@ public class Handler_sqlite extends SQLiteOpenHelper{
 		registro = new String[c.getCount()];
 		for( c.moveToFirst(); !c.isAfterLast(); c.moveToNext())
 		{
-			temp = "Id: "+ c.getString(id) + "\n"+
+			temp = 
 					 "Velocidad: " + c.getString(vel) + "\n" +
 					 "Fecha: " + c.getString(f) + "\n" +
 					 "horaActual: " + c.getString(h) + "\n" +

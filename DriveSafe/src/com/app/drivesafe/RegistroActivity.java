@@ -4,10 +4,7 @@ import com.app.DataBase.Handler_sqlite;
 import com.app.DataBase.TipoOrdenamiento;
 
 import android.app.Activity;
-import android.content.Intent;
 import android.os.Bundle;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemSelectedListener;
@@ -19,18 +16,11 @@ public class RegistroActivity extends Activity{
 
 	Handler_sqlite handler;
 	
-	//Intent de cada menu
-	private Intent velocidad, ajustes;
-	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.registros);
-		
-        //Creando los menus de cada actividad
-        velocidad = new Intent(this, new  VelocidadActivity().getClass());
-        ajustes = new Intent(this, new AjustesActivity().getClass());
 		
 		//Aqui le especifico cual es el XML para el diseño del activity
 		
@@ -81,7 +71,7 @@ public class RegistroActivity extends Activity{
 		
 		handler = new Handler_sqlite(this); //Aqui instancia la base de datos
 		handler.abrir();
-		handler.ingresarRegistro(20.0, "16/11/2012","13:15", "Guayaquil");
+		handler.ingresarRegistro(73.5, "30/11/2012","10:17", "Avenida del Bombero");
 		handler.cerrar();
 	}
 	
@@ -95,31 +85,6 @@ public class RegistroActivity extends Activity{
 		ListView list = (ListView) findViewById(R.id.listaRegistro);
 		this.mostrarListaRegistro(list);
 		handler.cerrar();//Cierro la base de datos*/
-	}
-
-	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
-	    getMenuInflater().inflate(R.menu.menu, menu);
-	  	//crearMenuOpciones(menu);
-	    return true;
-	}
-	
-	@Override
-	public boolean onOptionsItemSelected(MenuItem item) {
-		// TODO Auto-generated method stub
-		
-		switch(item.getItemId())
-		{
-			case R.id.MenuVelocidad:
-				item.setIntent(velocidad);
-				startActivity(velocidad);
-				break;
-			case R.id.MenuAjustes:
-				item.setIntent(ajustes);
-				startActivity(ajustes);
-				break;
-		}
-		return super.onOptionsItemSelected(item);
 	}
 	    
 	public void mostrarListaRegistro(ListView list)

@@ -5,8 +5,10 @@ import java.util.List;
 import java.util.Locale;
 
 import com.google.android.maps.MapActivity;
+import com.google.android.maps.MapController;
+import com.google.android.maps.MapView;
+
 import android.content.Context;
-import android.content.Intent;
 import android.content.res.AssetFileDescriptor;
 import android.content.res.AssetManager;
 import android.graphics.Color;
@@ -21,9 +23,7 @@ import android.media.MediaPlayer;
 import android.media.MediaPlayer.OnCompletionListener;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.Menu;
-import android.view.MenuItem;
-import android.widget.SeekBar;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.ToggleButton;
 
@@ -32,7 +32,7 @@ public class VelocidadActivity extends MapActivity implements OnCompletionListen
 	private double latitud, longitud, velocidad;
 	
 	private TextView lblVelocidad;
-	private SeekBar barraProgreso;
+	private ProgressBar barraProgreso;
 	private TextView lblDireccion;
 	
 	private LocationManager locManager;
@@ -45,21 +45,19 @@ public class VelocidadActivity extends MapActivity implements OnCompletionListen
 	private MediaPlayer player;
 	private AssetFileDescriptor dsp1;
 	private AssetFileDescriptor dsp2; 
-
-	//Intent de cada menu
-	private Intent registro, ajustes;
+	
+	//Elemento de mapa
+	private MapView mapa;
+	private MapController mapControl;
 	
 	@Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.velocidad);
-        setVolumeControlStream(AudioManager.STREAM_MUSIC);
         
-        //Creando los menus de cada actividad
-        registro = new Intent(this, new RegistroActivity().getClass());
-        ajustes = new Intent(this, new AjustesActivity().getClass());
         
         //Sonido de la aplicacion
+        setVolumeControlStream(AudioManager.STREAM_MUSIC);
         botonSonido = (ToggleButton)findViewById(R.id.btnSonido);
         AssetManager manager1 = this.getAssets();
         AssetManager manager2 = this.getAssets();
@@ -76,12 +74,18 @@ public class VelocidadActivity extends MapActivity implements OnCompletionListen
         }catch(Exception e)
         {}
         
+        //Definiendo componentes del MAPA
+        mapa =(MapView)findViewById(R.id.Mapa);
+        mapa.setBuiltInZoomControls(true);
+        
+        mapControl = mapa.getController();
 
+        //
         lblVelocidad = (TextView) findViewById(R.id.lblVelocidad);
         lblVelocidad.setText("Velocidad:" + "\n0.0 km/h");
         lblVelocidad.setTextColor(Color.WHITE);
         
-        barraProgreso = (SeekBar) findViewById(R.id.barraProgreso);
+        barraProgreso = (ProgressBar) findViewById(R.id.barraProgreso);
         barraProgreso.setEnabled(false);
         
         lblDireccion = (TextView) findViewById(R.id.lblDireccion);
@@ -89,54 +93,6 @@ public class VelocidadActivity extends MapActivity implements OnCompletionListen
         lblDireccion.setTextColor(Color.WHITE);
         
         comenzarLocalizacion();
-	}
-	
-	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
-	    getMenuInflater().inflate(R.menu.menu, menu);
-	  	//crearMenuOpciones(menu);
-	    return true;
-	}
-	
-	@Override
-	public boolean onOptionsItemSelected(MenuItem item) {
-		// TODO Auto-generated method stub
-		
-		switch(item.getItemId())
-		{
-			case R.id.MenuRegistro:
-				item.setIntent(registro);
-				startActivity(registro);
-				break;
-			case R.id.MenuAjustes:
-				item.setIntent(ajustes);
-				startActivity(ajustes);
-				break;
-		}
-		return super.onOptionsItemSelected(item);
-	}
-
-	public void crearMenuOpciones(Menu menuOpciones)
-	{
-	 	//1.Creo una instancia de menu
-		//group, id, orden 
-	   	MenuItem menu1 = menuOpciones.add(0,0,0,"Velocidad");
-	   	MenuItem menu2 = menuOpciones.add(0,1,1,"Registro");
-	   	MenuItem menu3 = menuOpciones.add(0,2,2,"Ajustes");
-	   	
-	   	//2. seteo una tecla de atajo
-	   	menu1.setAlphabeticShortcut('V'); //tecla de acceso
-	   	menu2.setAlphabeticShortcut('R');
-	   	menu3.setAlphabeticShortcut('A');
-	   	
-	   	//3. Seteo Iconos
-	   	menu1.setIcon(R.drawable.ico_velocimetro);
-	   	menu2.setIcon(R.drawable.ico_registro);
-	   	menu3.setIcon(R.drawable.ico_ajustes);
-	   	
-	   	menu1.setIntent(new Intent(this, VelocidadActivity.class));
-	   	menu2.setIntent(new Intent(this, RegistroActivity.class));
-	   	menu3.setIntent(new Intent(this, AjustesActivity.class));
 	}
 	
 	//--------- Posicionamientos y Uso del GPS
@@ -184,9 +140,33 @@ public class VelocidadActivity extends MapActivity implements OnCompletionListen
 		 {
 			latitud = loc.getLatitude();
 	    	longitud = loc.getLongitude();
-			//velocidad = loc.getSpeed() * 3.6 ;
+			velocidad = loc.getSpeed() * 3.6 ;
 	    	
 	   		lblVelocidad.setText("Velocidad:"+"\n" + String.valueOf(velocidad) + " km/h");
+	   		
+	   		Thread hilo = new Thread()
+	   		{
+
+				@Override
+				public void run() {
+					// TODO Auto-generated method stub
+					int vel=0;
+					while(vel < velocidad)
+					{
+						barraProgreso.setProgress((int)vel);
+						try {
+							wait(100);
+						} catch (InterruptedException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
+						vel++;
+					}
+					super.run();
+				}
+	   		};
+	   		hilo.start();
+	   		
 	   		barraProgreso.setProgress((int) velocidad);
 	   		
 	   		if(velocidad < 40 )
