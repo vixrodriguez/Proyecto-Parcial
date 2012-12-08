@@ -8,6 +8,12 @@ import android.database.sqlite.SQLiteOpenHelper;	//Manipula la base de datos
 
 import static android.provider.BaseColumns._ID;
 
+/**
+ * Clase que se encarga de la creacion y manipulacion de la
+ * base de datos SQLite dentro del dispositivo movil
+ * @author Victor S. Rodriguez Cabrera
+ *
+ */
 public class Handler_sqlite extends SQLiteOpenHelper{
 
 	public Handler_sqlite(Context context) {
@@ -94,7 +100,7 @@ public class Handler_sqlite extends SQLiteOpenHelper{
 				c = this.getReadableDatabase().query("Conductor",columnas,null,null,null,null,"horaActual");
 			break;
 			default:
-				c = this.getReadableDatabase().query("Conductor",columnas,null,null,null,null,null);
+				c = this.getReadableDatabase().query("Conductor",columnas,null,null,null,null,"fecha");
 			break;
 			
 		}
@@ -140,5 +146,12 @@ public class Handler_sqlite extends SQLiteOpenHelper{
 	{
 		this.close();
 	}
-
+	
+	/**
+	 * Borrar todos los registros de la base de datos
+	 */
+	public void borrar()
+	{
+		this.getWritableDatabase().delete("Conductor",null,null);
+	}
 }

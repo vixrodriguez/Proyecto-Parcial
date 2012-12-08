@@ -1,18 +1,24 @@
 package com.app.drivesafe;
 
 import java.io.IOException;
+import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
+import com.app.DataBase.Handler_sqlite;
+import com.app.gps.MyOverlay;
+import com.google.android.maps.GeoPoint;
 import com.google.android.maps.MapActivity;
 import com.google.android.maps.MapController;
 import com.google.android.maps.MapView;
+import com.google.android.maps.Overlay;
+import com.google.android.maps.OverlayItem;
 
 import android.content.Context;
 import android.content.res.AssetFileDescriptor;
 import android.content.res.AssetManager;
 import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
+import android.graphics.drawable.Drawable;
 import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
@@ -26,6 +32,14 @@ import android.util.Log;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.ToggleButton;
+
+/**
+ * Actividad que se encarga de mostrar al usuario su velocidad, direccion y
+ * su ubicacion en el mapa. Ademas informa al usuario si excedio si o no
+ * el limite de velocidad.
+ * @author Victor S. Rodriguez Cabrera
+ *
+ */
 
 public class VelocidadActivity extends MapActivity implements OnCompletionListener {
 
@@ -49,25 +63,33 @@ public class VelocidadActivity extends MapActivity implements OnCompletionListen
 	//Elemento de mapa
 	private MapView mapa;
 	private MapController mapControl;
+	private List<Overlay> mapOverlays;
+	private Drawable drawable;
+	private MyOverlay itemizedOverlay;
+	private GeoPoint punto;
+	private OverlayItem overlayitem;
+	private Geocoder gc;
+	
+	//BBDD
+	private Handler_sqlite handler;
 	
 	@Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.velocidad);
         
+        //Base de datos
+        handler = new Handler_sqlite(this); //Aqui instancia la base de datos
         
         //Sonido de la aplicacion
         setVolumeControlStream(AudioManager.STREAM_MUSIC);
-        botonSonido = (ToggleButton)findViewById(R.id.btnSonido);
         AssetManager manager1 = this.getAssets();
         AssetManager manager2 = this.getAssets();
+        player = new MediaPlayer();
         
         //Obtengo los archivos MP3 de la carpeta Assets
         try
-        {
-        	//dsp1 = manager1.openFd("bajeVelocidad.mp3");
-        	//dsp2 = manager2.openFd("infraccion.mp3");
-        	
+        {	
         	dsp1 = manager1.openFd("bajeVelocidad.wav");
         	dsp2 = manager2.openFd("infraccion.wav");
         	
@@ -80,7 +102,15 @@ public class VelocidadActivity extends MapActivity implements OnCompletionListen
         
         mapControl = mapa.getController();
 
-        //
+        mapOverlays = mapa.getOverlays();
+        drawable = this.getResources().getDrawable(R.drawable.logo);
+		
+		mapControl = mapa.getController();
+		mapControl.setZoom(6);
+        
+		gc = new Geocoder(this, Locale.getDefault());
+		
+        //Componentes de la Actividad
         lblVelocidad = (TextView) findViewById(R.id.lblVelocidad);
         lblVelocidad.setText("Velocidad:" + "\n0.0 km/h");
         lblVelocidad.setTextColor(Color.WHITE);
@@ -105,14 +135,14 @@ public class VelocidadActivity extends MapActivity implements OnCompletionListen
     	//Obtenemos la última posición conocida
     	Location loc = 
     		locManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
-    	
+		
     	//Mostramos la última posición conocida
     	mostrarPosicion(loc);
     	
+		//Agregando el listener al localizador
     	locListener = new LocationListener() {
 	    	public void onLocationChanged(Location location) {
 	    		mostrarPosicion(location);
-	    		//mostrarDireccion();
 	    	}
 	    	public void onProviderDisabled(String provider){
 	    	}
@@ -126,67 +156,75 @@ public class VelocidadActivity extends MapActivity implements OnCompletionListen
     	//Nos registramos para recibir actualizaciones de la posición
     	
     	locManager.requestLocationUpdates(
-    			LocationManager.GPS_PROVIDER, 100, 0, locListener);
+    			LocationManager.GPS_PROVIDER, 1000, (float) 0.1, locListener);
     	
     }
 	
 	/**
-	 * Muestra la velocidad del dispositivo segun el provider del GPS
-	 * @param loc Ubicacion del dispositivo
+	 * Muestra la velocidad del dispositivo segun el provider del GPS.
+	 * @param loc Ubicacion del dispositivo.
 	 */
 	 private void mostrarPosicion(Location loc) 
-	 {	 
+	 {	
+		 botonSonido = (ToggleButton)findViewById(R.id.btnSonido);
 		 if(loc != null)   	
 		 {
+			 
+			mostrarDireccion(loc);
+			 
 			latitud = loc.getLatitude();
 	    	longitud = loc.getLongitude();
 			velocidad = loc.getSpeed() * 3.6 ;
-	    	
-	   		lblVelocidad.setText("Velocidad:"+"\n" + String.valueOf(velocidad) + " km/h");
+			
+	   		lblVelocidad.setText("Velocidad:"+"\n" + String.format("%.2f", velocidad) + " km/h");
+		 
+	   		//Item de ubicacion del objeto en el mapa
+	   		punto = new GeoPoint(
+	   				this.conversion_Decimal_Entero(latitud), 
+	   				this.conversion_Decimal_Entero(longitud));
+	   		overlayitem = new OverlayItem(punto, "Recorrido","Usted se encuentra aqui");
 	   		
-	   		Thread hilo = new Thread()
-	   		{
-
-				@Override
-				public void run() {
-					// TODO Auto-generated method stub
-					int vel=0;
-					while(vel < velocidad)
-					{
-						barraProgreso.setProgress((int)vel);
-						try {
-							wait(100);
-						} catch (InterruptedException e) {
-							// TODO Auto-generated catch block
-							e.printStackTrace();
-						}
-						vel++;
-					}
-					super.run();
-				}
-	   		};
-	   		hilo.start();
+	   		itemizedOverlay = new MyOverlay(drawable, this);
+	   		itemizedOverlay.addOverlay(overlayitem);
+	   		
+	   		if(mapOverlays.size() > 0)
+	   			mapOverlays.set(0,itemizedOverlay);
+	   		else
+	   			mapOverlays.add(itemizedOverlay);
+	   		
+			mapControl.animateTo(punto);
 	   		
 	   		barraProgreso.setProgress((int) velocidad);
 	   		
 	   		if(velocidad < 40 )
 	   		{
 	   			//Pintara la barra de color VERDE
-	   			barraProgreso.setProgressDrawable(new ColorDrawable(Color.rgb(0, 255, 0))); 
+	   			barraProgreso.setDrawingCacheBackgroundColor(Color.GREEN);
 	   		}	
 	   		else if(40 <= velocidad  &&  velocidad < 60) 
 	   		{
 	   			//Pintara la barra de color NARANJA
-	   			barraProgreso.setProgressDrawable(new ColorDrawable(Color.rgb(255, 165, 0)));
+	   			barraProgreso.setDrawingCacheBackgroundColor(Color.rgb(255, 165, 0));
 	   			if(botonSonido!= null && botonSonido.isChecked())
 	   				iniciarSonido(dsp1);
 	   		}
 	   		else
 	   		{
 	   			//Pintara la barra de color ROJO
-	   			barraProgreso.setProgressDrawable(new ColorDrawable(Color.rgb(255, 0, 0)));
+	   			barraProgreso.setDrawingCacheBackgroundColor(Color.RED);
 	   			if(botonSonido!= null && botonSonido.isChecked())
 	   				iniciarSonido(dsp2);
+	   			
+	   			//Instanciando la fecha
+	   			
+	   			Date fecha = new Date();
+	   			
+	   			handler.abrir();
+	   			handler.ingresarRegistro(
+	   					velocidad,
+	   					fecha.getDay()+" / "+fecha.getMonth()+" / "+fecha.getYear(),
+	   					fecha.getHours() + " : " + fecha.getMinutes() + " : "+ fecha.getSeconds(), direccion);
+	   			handler.cerrar();
 	   		}
 	   			
 	   		Log.i("", String.valueOf(loc.getLatitude() + " - " + String.valueOf(loc.getLongitude())));
@@ -196,46 +234,61 @@ public class VelocidadActivity extends MapActivity implements OnCompletionListen
 	   		latitud = longitud = 0;
 	   	}
     }
+	 
+	 /**
+	  * Convierte la notacion decimal en entera
+	  * @param valor Recibe el valor decimal: 
+	  * Ej: -2.87866892
+	  * @return El valor en forma entera 
+	  * Ej: -2878668  
+	  */
+	 private int conversion_Decimal_Entero(double valor)
+	 {
+		 return (int) (valor * Math.pow(10,6));
+	 }
 	
 	 /**
 	  * Muestra la direccion de ubicacion del dispositivo segun Google Maps
 	  */
-	private void mostrarDireccion()
+	private void mostrarDireccion(Location loc)
 	{
-		List<Address> direcciones = null;
-    	
-    	Geocoder gc = new Geocoder(getApplicationContext(), Locale.getDefault());
+		gc = new Geocoder(this);
+		direccion = " ";		
 		
 		try {
 			//Se recibe la lista de direcciones segun la latitud y longitud determinada
-			direcciones = gc.getFromLocation(latitud, longitud, 1);
+			List<Address> direcciones = gc.getFromLocation(loc.getLatitude(), loc.getLongitude(), 1);
 			
 			if(direcciones != null && direcciones.size() > 0) {
 				Address returnedAddress = direcciones.get(0);
 				
 				for(int i=0; i<returnedAddress.getMaxAddressLineIndex(); i++)
 				{
-					direccion += returnedAddress.getAddressLine(i) + "\n";
+					if(!(i == returnedAddress.getMaxAddressLineIndex() - 1))
+						direccion += returnedAddress.getAddressLine(i) + " , ";
+					else
+						direccion += returnedAddress.getAddressLine(i);
 				} 
-				lblDireccion.setText(direccion);
+				lblDireccion.setText("Direccion: "+direccion);
 			  }
 			  else{
 				  lblDireccion.setText("Direccion: No se encontro");
 			  }
 		
 		} 
-		catch (IOException e) {
+		catch (Exception e) {
 			  // TODO Auto-generated catch block
 			  e.printStackTrace();
-			  lblDireccion.setText("Direccion: ERROR");
+			  lblDireccion.setText("Direccion: No localizado");
 		}	
 	}
 
+	
 
 	@Override
 	protected boolean isRouteDisplayed() {
 		// TODO Auto-generated method stub
-		return false;
+		return true;
 	}
 	
 	//-------------- SONIDO --------------------------------------
@@ -245,6 +298,7 @@ public class VelocidadActivity extends MapActivity implements OnCompletionListen
 	 */
 	private void iniciarSonido(AssetFileDescriptor dsp)
 	{
+		player = new MediaPlayer();
 		try {
 			player.setDataSource(dsp.getFileDescriptor(), dsp.getStartOffset(), dsp.getLength());
 			player.prepare();
@@ -268,4 +322,6 @@ public class VelocidadActivity extends MapActivity implements OnCompletionListen
 	public void onCompletion(MediaPlayer mp) {
 		player.stop(); //Detiene la ejecucion del sonido
 	}
+	
+	//--------------------------------------------------------------------
 }

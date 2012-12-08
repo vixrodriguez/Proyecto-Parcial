@@ -12,6 +12,13 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.Spinner;
 
+/**
+ * Actividad que muestra y ordena los datos
+ * de la base de datos SQLite de las infracciones
+ * cometidas por el usuario.
+ * @author Victor S. Rodriguez Cabrera
+ *
+ */
 public class RegistroActivity extends Activity{
 
 	Handler_sqlite handler;
@@ -21,7 +28,7 @@ public class RegistroActivity extends Activity{
 		// TODO Auto-generated method stub
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.registros);
-		
+		handler = new Handler_sqlite(this); //Aqui instancia la base de datos
 		//Aqui le especifico cual es el XML para el diseño del activity
 		
 		/*
@@ -50,29 +57,7 @@ public class RegistroActivity extends Activity{
 		
 		sp.setAdapter(adp);
 		
-		
-		/*sp.setOnItemSelectedListener(new OnItemSelectedListener() 
-		{
-
-			@SuppressLint("ShowToast")
-			public void onItemSelected(AdapterView<?> arg0, View arg1,
-					int arg2, long arg3) {
-				// TODO Auto-generated method stub
-				Toast.makeText(this, sp.getSelectedItem().toString(), Toast.LENGTH_LONG);
-			}
-
-			public void onNothingSelected(AdapterView<?> arg0) {
-				// TODO Auto-generated method stub
-				
-			}
-			
-		}
-		);*/
-		
-		handler = new Handler_sqlite(this); //Aqui instancia la base de datos
-		handler.abrir();
-		handler.ingresarRegistro(73.5, "30/11/2012","10:17", "Avenida del Bombero");
-		handler.cerrar();
+		this.setProgressBarVisibility(true);
 	}
 	
 	@Override
@@ -80,15 +65,22 @@ public class RegistroActivity extends Activity{
 		// TODO Auto-generated method stub
 		super.onResume();
 		
-		/*handler.abrir(); //Abro la base de datos
+		//Me permite actualizar la base constantemente 
+		handler.abrir(); //Abro la base de datos
 		
 		ListView list = (ListView) findViewById(R.id.listaRegistro);
 		this.mostrarListaRegistro(list);
 		handler.cerrar();//Cierro la base de datos*/
 	}
-	    
+	
+	/**
+	 * Muestra los registros en el ListView obtenido desde la BBDD 
+	 * @param Recibe la lista en donde se almacenara los datos
+	 */
 	public void mostrarListaRegistro(ListView list)
 	{
+		handler.abrir();
+		
 		TipoOrdenamiento t;
 		Spinner sp = (Spinner) findViewById(R.id.listaOrdenamiento);
 		
@@ -105,5 +97,7 @@ public class RegistroActivity extends Activity{
 		 
 		list.setAdapter(
 		new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, registro));
+		
+		handler.cerrar();
 	}
 }

@@ -1,7 +1,5 @@
 package com.app.drivesafe;
 
-import android.location.LocationManager;
-import android.net.Uri;
 import android.net.wifi.WifiManager;
 import android.os.Bundle;
 import android.provider.Settings;
@@ -13,6 +11,12 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.res.Resources;
 
+/**
+ * Actividad principa que se encarga del trapaso
+ * entre actividades por medio los Tabs de la pantalla
+ * @author Victor S. Rodriguez Cabrera
+ *
+ */
 public class MainActivity extends TabActivity {
 	
     @SuppressLint("ShowToast")
@@ -39,35 +43,17 @@ public class MainActivity extends TabActivity {
         host.addTab(t2);
         host.addTab(t3);
         
-        this.activarGPS();
-        this.activarWiFi();
-        //this.activarRedes();
-        //AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        //Toast.makeText(this, "Estado: " +this.netCheckin(), Toast.LENGTH_LONG).show();
-        //this.turnGPSOnOff();
-        //Toast toast = new Toast(this);
-        
+        this.activarGPS(); //Muestra las configuraciones
+        this.activarWiFi(); //Activa el Wi-Fi
     }
     
+    /**
+     * Muestra la ventana de configuraciones para activar las Redes Inalambricas y el GPS
+     */
     public void activarGPS()
     {
     	Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
     	startActivity(intent);
-    }
-    
-    /**
-     * Metodo que activa el GPS al abrir la aplicacion
-     */
-    private void turnGPSOnOff(){
-    	  String provider = Settings.Secure.getString(getContentResolver(), Settings.Secure.LOCATION_PROVIDERS_ALLOWED);
-    	  if(!provider.contains("gps")){
-    	    final Intent poke = new Intent();
-    	    poke.setClassName("com.android.settings", "com.android.settings.widget.SettingsAppWidgetProvider");
-    	    poke.addCategory(Intent.CATEGORY_ALTERNATIVE);
-    	    poke.setData(Uri.parse("3")); 
-    	    sendBroadcast(poke);
-    	    //Toast.makeText(this, "Your GPS is Enabled",Toast.LENGTH_SHORT).show();
-    	  }
     }
     
     /**
@@ -77,15 +63,6 @@ public class MainActivity extends TabActivity {
     {
     	WifiManager wifi = (WifiManager) getSystemService(Context.WIFI_SERVICE); 
     	wifi.setWifiEnabled(true);
-    }
-    
-    
-    private void activarRedes()
-    {
-    	LocationManager locManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-    	
-    	locManager.setTestProviderEnabled(LocationManager.GPS_PROVIDER, true);
-    	
     }
 }
 

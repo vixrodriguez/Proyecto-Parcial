@@ -2,29 +2,28 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#000000" >
+    android:background="@drawable/andspeed" >
 
     <ToggleButton
         android:id="@+id/btnSonido"
         android:layout_width="100dp"
         android:layout_height="100dp"
-        android:layout_alignParentLeft="true"
         android:layout_alignParentTop="true"
-        android:layout_marginLeft="20dp"
-        android:layout_marginTop="32dp"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="40dp"
         android:checked="true"
         android:text="@string/strSonido"
         android:textOff="@string/strSonido"
         android:textOn="@string/strSonido" />
 
     <Button
-        android:id="@+id/Button1"
+        android:id="@+id/btnBorrar"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
         android:layout_alignParentRight="true"
         android:layout_below="@+id/btnSonido"
-        android:layout_marginRight="32dp"
-        android:layout_marginTop="52dp"
+        android:layout_marginTop="28dp"
         android:text="Borrar Historial" />
 
 </RelativeLayout>

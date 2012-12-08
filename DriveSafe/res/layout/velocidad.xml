@@ -16,7 +16,8 @@
         android:id="@+id/barraProgreso"
         style="?android:attr/progressBarStyleHorizontal"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        android:max="150" />
 
     <TextView
         android:id="@+id/lblDireccion"
@@ -24,13 +25,14 @@
         android:layout_height="wrap_content"
         android:text="Direccion: "
         android:textAppearance="?android:attr/textAppearanceMedium" 
-        android:textColor="#ffffff"/>4
+        android:textColor="#ffffff"/>
         
     <com.google.android.maps.MapView
         android:id="@+id/Mapa"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
         android:clickable="true"
+        android:enabled="true"
         android:apiKey="063Q6hH0_Cl1Oz1P5E_v1rd5SAi4Jzp_i9VXCRA"/>
 
 </LinearLayout>

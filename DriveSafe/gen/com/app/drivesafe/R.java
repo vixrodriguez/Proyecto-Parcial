@@ -15,20 +15,21 @@ public final class R {
     public static final class attr {
     }
     public static final class drawable {
-        public static final int ic_action_search=0x7f020000;
-        public static final int ic_launcher=0x7f020001;
-        public static final int ico_ajustes=0x7f020002;
-        public static final int ico_registro=0x7f020003;
-        public static final int ico_velocimetro=0x7f020004;
-        public static final int logo=0x7f020005;
+        public static final int andspeed=0x7f020000;
+        public static final int ic_action_search=0x7f020001;
+        public static final int ic_launcher=0x7f020002;
+        public static final int ico_ajustes=0x7f020003;
+        public static final int ico_registro=0x7f020004;
+        public static final int ico_velocimetro=0x7f020005;
+        public static final int logo=0x7f020006;
     }
     public static final class id {
-        public static final int Button1=0x7f080001;
         public static final int Mapa=0x7f08000b;
         public static final int MenuAjustes=0x7f08000f;
         public static final int MenuRegistro=0x7f08000e;
         public static final int MenuVelocidad=0x7f08000d;
         public static final int barraProgreso=0x7f080009;
+        public static final int btnBorrar=0x7f080001;
         public static final int btnSonido=0x7f080000;
         public static final int lblDireccion=0x7f08000a;
         public static final int lblOrdenamiento=0x7f080006;
